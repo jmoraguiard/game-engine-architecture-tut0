@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C++ Express 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game-engine-architecture-tut0", "game-engine-architecture-tut0\game-engine-architecture-tut0.vcxproj", "{CC383586-E86F-4BCD-B0DF-73F80F982E69}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC383586-E86F-4BCD-B0DF-73F80F982E69}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CC383586-E86F-4BCD-B0DF-73F80F982E69}.Debug|Win32.Build.0 = Debug|Win32
+		{CC383586-E86F-4BCD-B0DF-73F80F982E69}.Release|Win32.ActiveCfg = Release|Win32
+		{CC383586-E86F-4BCD-B0DF-73F80F982E69}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
