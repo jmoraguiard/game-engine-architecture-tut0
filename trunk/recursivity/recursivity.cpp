@@ -22,7 +22,7 @@ int main ()
   stringstream(mystr) >> number;
   cout << number << "! = " << factorial (number) << endl;
 
-  getline (cin, mystr);
+  getline(cin, mystr);
 
   return (0);
 }

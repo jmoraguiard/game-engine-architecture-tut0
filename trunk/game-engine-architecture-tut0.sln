@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cout_cin", "cout_cin\cout_c
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic_memory", "dynamic_memory\dynamic_memory.vcxproj", "{74BF6198-4D10-4A8D-84B8-3761CA41262F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "structures", "structures\structures.vcxproj", "{DCE1F3C6-8002-4A4C-8ABD-2BFD3806D83A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -37,6 +39,10 @@ Global
 		{74BF6198-4D10-4A8D-84B8-3761CA41262F}.Debug|Win32.Build.0 = Debug|Win32
 		{74BF6198-4D10-4A8D-84B8-3761CA41262F}.Release|Win32.ActiveCfg = Release|Win32
 		{74BF6198-4D10-4A8D-84B8-3761CA41262F}.Release|Win32.Build.0 = Release|Win32
+		{DCE1F3C6-8002-4A4C-8ABD-2BFD3806D83A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DCE1F3C6-8002-4A4C-8ABD-2BFD3806D83A}.Debug|Win32.Build.0 = Debug|Win32
+		{DCE1F3C6-8002-4A4C-8ABD-2BFD3806D83A}.Release|Win32.ActiveCfg = Release|Win32
+		{DCE1F3C6-8002-4A4C-8ABD-2BFD3806D83A}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

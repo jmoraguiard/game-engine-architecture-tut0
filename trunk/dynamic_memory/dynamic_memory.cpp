@@ -49,7 +49,7 @@ int main ()
   // error assigning memory. Take measures.
   }; 
 
-  getline (cin, mystr);
+  getline(cin, mystr);
 
   return (0);
 }

@@ -65,7 +65,7 @@ int main()
   cout << "firstvalue is " << firstvalue << endl;
   cout << "secondvalue is " << secondvalue << endl;
 
-	getline (cin, mystr);
+	getline(cin, mystr);
 
 	return (0);
 
