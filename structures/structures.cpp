@@ -5,11 +5,10 @@ using namespace std;
 
 int main ()
 {
-  string mystr;
+	string mystr;
 
-  
-  getline(cin, mystr);
 
-  return (0);
+	getline(cin, mystr);
+
+	return (0);
 }
-

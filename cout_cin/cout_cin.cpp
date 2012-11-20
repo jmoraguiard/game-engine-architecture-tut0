@@ -22,7 +22,7 @@ int main ()
   stringstream(mystr) >> quantity;
   cout << "Total price: " << price*quantity << endl;
 
-  getline (cin, mystr);
+  getline(cin, mystr);
 
   return (0);
 }
