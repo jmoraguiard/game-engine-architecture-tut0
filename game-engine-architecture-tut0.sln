@@ -3,6 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C++ Express 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game-engine-architecture-tut0", "game-engine-architecture-tut0\game-engine-architecture-tut0.vcxproj", "{CC383586-E86F-4BCD-B0DF-73F80F982E69}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "recursivity", "recursivity\recursivity.vcxproj", "{B030EE3F-C9A7-4D25-B606-7853A41A44DB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pointers", "pointers\pointers.vcxproj", "{5DF79B77-9B02-4598-8FE5-CB0585C4E11F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cout_cin", "cout_cin\cout_cin.vcxproj", "{0128F7F8-D58C-4A76-A1F5-B0BE782752EE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic_memory", "dynamic_memory\dynamic_memory.vcxproj", "{74BF6198-4D10-4A8D-84B8-3761CA41262F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +21,22 @@ Global
 		{CC383586-E86F-4BCD-B0DF-73F80F982E69}.Debug|Win32.Build.0 = Debug|Win32
 		{CC383586-E86F-4BCD-B0DF-73F80F982E69}.Release|Win32.ActiveCfg = Release|Win32
 		{CC383586-E86F-4BCD-B0DF-73F80F982E69}.Release|Win32.Build.0 = Release|Win32
+		{B030EE3F-C9A7-4D25-B606-7853A41A44DB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B030EE3F-C9A7-4D25-B606-7853A41A44DB}.Debug|Win32.Build.0 = Debug|Win32
+		{B030EE3F-C9A7-4D25-B606-7853A41A44DB}.Release|Win32.ActiveCfg = Release|Win32
+		{B030EE3F-C9A7-4D25-B606-7853A41A44DB}.Release|Win32.Build.0 = Release|Win32
+		{5DF79B77-9B02-4598-8FE5-CB0585C4E11F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5DF79B77-9B02-4598-8FE5-CB0585C4E11F}.Debug|Win32.Build.0 = Debug|Win32
+		{5DF79B77-9B02-4598-8FE5-CB0585C4E11F}.Release|Win32.ActiveCfg = Release|Win32
+		{5DF79B77-9B02-4598-8FE5-CB0585C4E11F}.Release|Win32.Build.0 = Release|Win32
+		{0128F7F8-D58C-4A76-A1F5-B0BE782752EE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0128F7F8-D58C-4A76-A1F5-B0BE782752EE}.Debug|Win32.Build.0 = Debug|Win32
+		{0128F7F8-D58C-4A76-A1F5-B0BE782752EE}.Release|Win32.ActiveCfg = Release|Win32
+		{0128F7F8-D58C-4A76-A1F5-B0BE782752EE}.Release|Win32.Build.0 = Release|Win32
+		{74BF6198-4D10-4A8D-84B8-3761CA41262F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{74BF6198-4D10-4A8D-84B8-3761CA41262F}.Debug|Win32.Build.0 = Debug|Win32
+		{74BF6198-4D10-4A8D-84B8-3761CA41262F}.Release|Win32.ActiveCfg = Release|Win32
+		{74BF6198-4D10-4A8D-84B8-3761CA41262F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
