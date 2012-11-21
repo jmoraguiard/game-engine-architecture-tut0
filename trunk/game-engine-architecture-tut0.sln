@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C++ Express 2010
+# Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game-engine-architecture-tut0", "game-engine-architecture-tut0\game-engine-architecture-tut0.vcxproj", "{CC383586-E86F-4BCD-B0DF-73F80F982E69}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "recursivity", "recursivity\recursivity.vcxproj", "{B030EE3F-C9A7-4D25-B606-7853A41A44DB}"
@@ -18,6 +18,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "overloading_operators", "overloading_operators\overloading_operators.vcxproj", "{0A09FF0B-B763-4AFD-88AC-E5AB854E8C71}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "static", "static\static.vcxproj", "{40EE434A-0265-411D-9AB8-542B95F89E06}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "inheritance", "inheritance\inheritance.vcxproj", "{EAA0224E-D508-49EF-8DE4-1488A7950736}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +63,10 @@ Global
 		{40EE434A-0265-411D-9AB8-542B95F89E06}.Debug|Win32.Build.0 = Debug|Win32
 		{40EE434A-0265-411D-9AB8-542B95F89E06}.Release|Win32.ActiveCfg = Release|Win32
 		{40EE434A-0265-411D-9AB8-542B95F89E06}.Release|Win32.Build.0 = Release|Win32
+		{EAA0224E-D508-49EF-8DE4-1488A7950736}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EAA0224E-D508-49EF-8DE4-1488A7950736}.Debug|Win32.Build.0 = Debug|Win32
+		{EAA0224E-D508-49EF-8DE4-1488A7950736}.Release|Win32.ActiveCfg = Release|Win32
+		{EAA0224E-D508-49EF-8DE4-1488A7950736}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
