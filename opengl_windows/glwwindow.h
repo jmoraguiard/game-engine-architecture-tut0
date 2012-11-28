@@ -2,6 +2,9 @@
 #define _GLWINDOW_H
 
 #include <windows.h>
+#include <GL/gl.h>
+
+#include "wglext.h"
 
 class Example; //Declare our Example class
 
@@ -22,10 +25,12 @@ class GLWindow
 
 		private:
 				void OnResize(HWND window_handler, UINT flag, int width, int height);
+				void setupPixelFormat(void);
 
 				bool is_running_;
 
 				HWND window_handler_;
+				HDC device_context_handler_;
 				HINSTANCE instance_handler_;
 				WNDCLASSEX window_class; //Contains window class information. (http://msdn.microsoft.com/en-us/library/windows/desktop/ms633577%28v=vs.85%29.aspx)
 };

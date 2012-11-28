@@ -70,8 +70,55 @@ void GLWindow::OnResize(HWND window_handler, UINT flag, int width, int height) {
     // Handle resizing
 }
 
+void GLWindow::setupPixelFormat(void) {
+    int pixelFormat;
+
+    PIXELFORMATDESCRIPTOR pfd =
+    {   
+        sizeof(PIXELFORMATDESCRIPTOR),  // size
+            1,                          // version
+            PFD_SUPPORT_OPENGL |        // OpenGL window
+            PFD_DRAW_TO_WINDOW |        // render to window
+            PFD_DOUBLEBUFFER,           // support double-buffering
+            PFD_TYPE_RGBA,              // color type
+            32,                         // prefered color depth
+            0, 0, 0, 0, 0, 0,           // color bits (ignored)
+            0,                          // no alpha buffer
+            0,                          // alpha bits (ignored)
+            0,                          // no accumulation buffer
+            0, 0, 0, 0,                 // accum bits (ignored)
+            16,                         // depth buffer
+            0,                          // no stencil buffer
+            0,                          // no auxiliary buffers
+            PFD_MAIN_PLANE,             // main layer
+            0,                          // reserved
+            0, 0, 0,                    // no layer, visible, damage masks
+    };
+
+    pixelFormat = ChoosePixelFormat(device_context_handler_, &pfd);
+    SetPixelFormat(device_context_handler_, pixelFormat, &pfd);
+}
+
+
 LRESULT GLWindow::WindowProcess(HWND window_handler, UINT message_code, WPARAM w_additional_data, LPARAM l_additional_data) {
     switch (message_code) {
+				case WM_CREATE:
+				{
+						device_context_handler_ = GetDC(window_handler);
+						setupPixelFormat();
+
+						//Set the version that we want, in this case 3.0
+						int attribs[] = {
+							WGL_CONTEXT_MAJOR_VERSION_ARB, 3,
+							WGL_CONTEXT_MINOR_VERSION_ARB, 0,
+						0}; //zero indicates the end of the array
+
+						//Create temporary context so we can get a pointer to the function
+						HGLRC tmpContext = wglCreateContext(m_hdc);
+						//Make it current
+						wglMakeCurrent(m_hdc, tmpContext);
+				}
+				break;
 				case WM_CLOSE:
 				{
 						if (MessageBox(window_handler, "Really quit?", "My application", MB_OKCANCEL) == IDOK)
@@ -125,24 +172,27 @@ LRESULT GLWindow::StaticWindowProcess(HWND window_handler, UINT message_code, WP
 		GLWindow* window = NULL;
 
     //If this is the create message
-    if(message_code == WM_CREATE)
-    {
-        //Get the pointer we stored during create
-        window = (GLWindow*)((LPCREATESTRUCT)l_additional_data)->lpCreateParams;
+    switch(message_code) {
+				case WM_CREATE:
+				{
+						//Get the pointer we stored during create
+						window = (GLWindow*)((LPCREATESTRUCT)l_additional_data)->lpCreateParams;
 
-        //Associate the window pointer with the hwnd for the other events to access
-        SetWindowLongPtr(window_handler, GWL_USERDATA, (LONG_PTR)window);
-    }
-    else
-    {
-        //If this is not a creation event, then we should have stored a pointer to the window
-        window = (GLWindow*)GetWindowLongPtr(window_handler, GWL_USERDATA);
+						//Associate the window pointer with the hwnd for the other events to access
+						SetWindowLongPtr(window_handler, GWL_USERDATA, (LONG_PTR)window);
+				}
+				break;
+				default:
+				{
+						//If this is not a creation event, then we should have stored a pointer to the window
+						window = (GLWindow*)GetWindowLongPtr(window_handler, GWL_USERDATA);
 
-        if(!window) 
-        {
-            return DefWindowProc(window_handler, message_code, w_additional_data, l_additional_data);    
-        }
-    }
+						if(!window) 
+						{
+								return DefWindowProc(window_handler, message_code, w_additional_data, l_additional_data);    
+						}
+				}
+		}
 
     //Call our window's member WndProc (allows us to access member variables)
 		return window->WindowProcess(window_handler, message_code, w_additional_data, l_additional_data);
