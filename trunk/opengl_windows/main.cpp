@@ -13,13 +13,13 @@ int WINAPI wWinMain(HINSTANCE instance_handler, //instance_handler is something 
 
 		GLWindow program_window(instance_handler);
 
-		if(!program_window.create()){
+		if (!program_window.create()) {
 				MessageBox(NULL, "Window Creation Failed!", "An error ocurrer", MB_ICONINFORMATION | MB_OK);
+				program_window.destroy();
 				return 0;
 		}
 
-		while(program_window.isRunning())
-    {
+		while (program_window.isRunning()) {
         program_window.processEvents(); //Process any window events
     }
 
