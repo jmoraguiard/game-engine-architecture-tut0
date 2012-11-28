@@ -27,6 +27,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "abstract", "abstract\abstra
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "template", "template\template.vcxproj", "{A5A498C5-BC1B-466A-A533-599F82208090}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "opengl_windows", "opengl_windows\opengl_windows.vcxproj", "{4B4755BA-D8DB-435B-83A1-467862996E7B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -85,6 +87,10 @@ Global
 		{A5A498C5-BC1B-466A-A533-599F82208090}.Debug|Win32.Build.0 = Debug|Win32
 		{A5A498C5-BC1B-466A-A533-599F82208090}.Release|Win32.ActiveCfg = Release|Win32
 		{A5A498C5-BC1B-466A-A533-599F82208090}.Release|Win32.Build.0 = Release|Win32
+		{4B4755BA-D8DB-435B-83A1-467862996E7B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4B4755BA-D8DB-435B-83A1-467862996E7B}.Debug|Win32.Build.0 = Debug|Win32
+		{4B4755BA-D8DB-435B-83A1-467862996E7B}.Release|Win32.ActiveCfg = Release|Win32
+		{4B4755BA-D8DB-435B-83A1-467862996E7B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
