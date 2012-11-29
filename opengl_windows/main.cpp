@@ -21,6 +21,10 @@ int WINAPI wWinMain(HINSTANCE instance_handler, //instance_handler is something 
 
 		while (program_window.isRunning()) {
         program_window.processEvents(); //Process any window events
+
+				float elapsedTime = program_window.getElapsedSeconds();
+
+				program_window.swapBuffers();
     }
 
     program_window.destroy(); //Destroy the program window

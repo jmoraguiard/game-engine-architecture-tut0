@@ -26,5 +26,11 @@
     <ClInclude Include="glwwindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="wglext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="glx\glext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

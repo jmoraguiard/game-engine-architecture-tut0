@@ -1,11 +1,18 @@
 #include "glwwindow.h"
 
+PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = NULL;
+
 GLWindow::GLWindow(HINSTANCE instance_handler) {
 		instance_handler_ = instance_handler;
 }
 
 bool GLWindow::create() {
 		const char CLASS_NAME[]  = "Windows Window Class";
+
+		window_rectangle_.left		= (long) 0;
+		window_rectangle_.right		= (long) 1024;
+		window_rectangle_.top			= (long) 0;
+		window_rectangle_.bottom	= (long) 768;
 
 		window_class.cbSize					= sizeof(WNDCLASSEX);						// The size, in bytes, of this structure.
 		window_class.style					= CS_HREDRAW | CS_VREDRAW;
@@ -20,7 +27,14 @@ bool GLWindow::create() {
     window_class.hbrBackground	= NULL;                             // don't need background
     window_class.lpszMenuName		= NULL; 
 
-    RegisterClassEx(&window_class); // Registers a window class with the operating system for subsequent use in calls to the CreateWindow or CreateWindowEx function.
+    if(!RegisterClassEx(&window_class))// Registers a window class with the operating system for subsequent use in calls to the CreateWindow or CreateWindowEx function.
+				return false;
+
+		window_extended_style_ = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
+    window_style_ = WS_OVERLAPPEDWINDOW;
+
+		if(!AdjustWindowRectEx(&window_rectangle_, window_style_, false, window_extended_style_))
+			return false;
     
     HWND window_handler = CreateWindowEx( // Creates an overlapped, pop-up, or child window with an extended window style.
         NULL,                         // Optional window styles.
@@ -38,14 +52,21 @@ bool GLWindow::create() {
         return false;
 
 		ShowWindow(window_handler, SW_SHOW);
-		is_running_ = true;
 		
 		return true;
 }
 
 void GLWindow::destroy() 
 {
-    // Destroy Window
+		ChangeDisplaySettings(NULL, 0);
+}
+
+float GLWindow::getElapsedSeconds()
+{
+    float currentTime = float(GetTickCount()) / 1000.0f;
+    float seconds = float(currentTime - last_time_);
+    last_time_ = currentTime;
+    return seconds;
 }
 
 bool GLWindow::isRunning()
@@ -99,6 +120,9 @@ void GLWindow::setupPixelFormat(void) {
     SetPixelFormat(device_context_handler_, pixelFormat, &pfd);
 }
 
+void GLWindow::swapBuffers() { 
+	SwapBuffers(device_context_handler_); 
+}
 
 LRESULT GLWindow::WindowProcess(HWND window_handler, UINT message_code, WPARAM w_additional_data, LPARAM l_additional_data) {
     switch (message_code) {
@@ -114,9 +138,29 @@ LRESULT GLWindow::WindowProcess(HWND window_handler, UINT message_code, WPARAM w
 						0}; //zero indicates the end of the array
 
 						//Create temporary context so we can get a pointer to the function
-						HGLRC tmpContext = wglCreateContext(m_hdc);
+						HGLRC tmpContext = wglCreateContext(device_context_handler_);
 						//Make it current
-						wglMakeCurrent(m_hdc, tmpContext);
+						wglMakeCurrent(device_context_handler_, tmpContext);
+
+						//Get the function pointer
+						wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC) wglGetProcAddress("wglCreateContextAttribsARB");
+
+						//If this is NULL then OpenGL 3.0 is not supported
+						if (!wglCreateContextAttribsARB)
+						{
+								MessageBox(window_handler, "OpenGL 3.0 is not supported, falling back to GL 2.1", "An error occurred", MB_ICONERROR|MB_OK);
+								rendering_context_handler_ = tmpContext;
+						} else {
+								// Create an OpenGL 3.0 context using the new function
+								rendering_context_handler_ = wglCreateContextAttribsARB(device_context_handler_, 0, attribs);
+								//Delete the temporary context
+								wglDeleteContext(tmpContext);
+						}
+
+						//Make the GL3 context current
+						wglMakeCurrent(device_context_handler_, rendering_context_handler_);
+
+						is_running_ = true; //Mark our window as running
 				}
 				break;
 				case WM_CLOSE:
@@ -129,7 +173,11 @@ LRESULT GLWindow::WindowProcess(HWND window_handler, UINT message_code, WPARAM w
 				break;
 				case WM_DESTROY:
 				{
+						wglMakeCurrent(device_context_handler_, NULL);
+						wglDeleteContext(rendering_context_handler_);
+
 						is_running_ = false;
+
 						PostQuitMessage(0);
 						return 0;
 				}
@@ -188,10 +236,9 @@ LRESULT GLWindow::StaticWindowProcess(HWND window_handler, UINT message_code, WP
 						window = (GLWindow*)GetWindowLongPtr(window_handler, GWL_USERDATA);
 
 						if(!window) 
-						{
 								return DefWindowProc(window_handler, message_code, w_additional_data, l_additional_data);    
-						}
 				}
+				break;
 		}
 
     //Call our window's member WndProc (allows us to access member variables)
