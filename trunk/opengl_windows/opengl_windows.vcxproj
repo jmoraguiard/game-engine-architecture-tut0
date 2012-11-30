@@ -75,15 +75,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="gameManager.cpp" />
-    <ClCompile Include="gameState.cpp" />
+    <ClCompile Include="applicationManager.cpp" />
+    <ClCompile Include="applicationState.cpp" />
     <ClCompile Include="glwwindow.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="splashScreenState.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="gameManager.h" />
-    <ClInclude Include="gameState.h" />
+    <ClInclude Include="applicationManager.h" />
+    <ClInclude Include="applicationState.h" />
     <ClInclude Include="glwwindow.h" />
     <ClInclude Include="glx\glext.h" />
     <ClInclude Include="splashScreenState.h" />

@@ -22,15 +22,14 @@ SplashScreenState* SplashScreenState::Instance() {
 }
 
 bool SplashScreenState::init() {
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
 
-	//angle_rotation_ = 0;
+	angle_rotation_ = 0;
 
 	return true;
+
 }
 
-void SplashScreenState::update(GameManager* game_manager, float elapsed_time) {
+void SplashScreenState::update(ApplicationManager* game_manager, float elapsed_time) {
 		
 	const float SPEED = 15.0f;
 
@@ -40,10 +39,7 @@ void SplashScreenState::update(GameManager* game_manager, float elapsed_time) {
 
 }
 
-void SplashScreenState::draw(GameManager* game_manager) {
-	
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
+void SplashScreenState::draw(ApplicationManager* game_manager) {
 
 	glRotatef(angle_rotation_, 0, 0, 1);
 
@@ -58,7 +54,7 @@ void SplashScreenState::draw(GameManager* game_manager) {
 
 }
 
-void SplashScreenState::keyboardEvent(GameManager* game_manager, char key_pressed) {
+void SplashScreenState::keyboardEvent(ApplicationManager* game_manager, char key_pressed) {
 	
 	switch(key_pressed)
 	{
@@ -69,16 +65,6 @@ void SplashScreenState::keyboardEvent(GameManager* game_manager, char key_presse
 
 }
 
-void SplashScreenState::onResize(GameManager* game_manager, int width, int height) {
-	
-	glViewport(0, 0, width, height);
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	gluPerspective(45.0f, float(width) / float(height), 1.0f, 100.0f);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+void SplashScreenState::onResize(ApplicationManager* game_manager, int width, int height) {
 
 }

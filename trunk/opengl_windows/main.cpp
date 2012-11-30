@@ -3,7 +3,7 @@
 #include "glwwindow.h"
 #endif
 
-#include "gameManager.h"
+#include "ApplicationManager.h"
 
 //wWinMain is the conventional and most recent name used for the application entry point. (http://msdn.microsoft.com/en-us/library/windows/desktop/ff381406%28v=vs.85%29.aspx)
 #ifdef _WIN32
@@ -22,9 +22,9 @@ int WINAPI wWinMain(HINSTANCE instance_handler, //instance_handler is something 
 	GLWindow program_window(instance_handler);
 #endif
 
-	GameManager game_manager;
+	ApplicationManager game_manager;
 
-	program_window.attachGameManager(&game_manager);
+	program_window.attachApplicationManager(&game_manager);
 
 	if (!program_window.create(window_width, window_height, window_bpp, window_fullscreen)) {
 #ifdef _WIN32

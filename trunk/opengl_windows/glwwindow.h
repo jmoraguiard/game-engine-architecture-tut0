@@ -4,7 +4,7 @@
 #include <windows.h>
 #include <ctime>
 
-class GameManager;
+class ApplicationManager;
 
 class GLWindow 
 {
@@ -14,7 +14,7 @@ class GLWindow
 		bool create(int width, int height, int bpp, bool fullscreen);
 		void destroy();
 		void processEvents();
-		void attachGameManager(GameManager* game_manager);
+		void attachApplicationManager(ApplicationManager* game_manager);
 
 		float getElapsedSeconds();
     
@@ -28,9 +28,9 @@ class GLWindow
 	private:
 		void OnResize(int width, int height);
 		void setupPixelFormat(void);
-		GameManager* getAttachedGameManager() { return game_manager_; }
+		ApplicationManager* getAttachedApplicationManager() { return game_manager_; }
 
-		GameManager* game_manager_;
+		ApplicationManager* game_manager_;
 		bool is_running_;
 		float last_time_;
 

@@ -1,13 +1,13 @@
 #ifndef _GAME_MANAGER_H
 #define _GAME_MANAGER_H
 
-class GameState;
+class ApplicationState;
 
-class GameManager
+class ApplicationManager
 {
 	public:
-		GameManager();
-		virtual ~GameManager();
+		ApplicationManager();
+		virtual ~ApplicationManager();
 
 		bool init();
 		void update(float elapsed_time);
@@ -16,10 +16,10 @@ class GameManager
 
 		void onResize(int width, int height);
 
-		void changeState(GameState* game_state);
+		void changeState(ApplicationState* game_state);
 
 	private:
-		GameState* game_state_;
+		ApplicationState* game_state_;
 };
 
 #endif
