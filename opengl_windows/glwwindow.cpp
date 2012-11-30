@@ -8,7 +8,7 @@
 
 #include "wglext.h"
 
-#include "gameManager.h"
+#include "applicationManager.h"
 
 PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = NULL;
 
@@ -101,13 +101,13 @@ void GLWindow::processEvents()
     }
 }
 
-void GLWindow::attachGameManager(GameManager* game_manager)
+void GLWindow::attachApplicationManager(ApplicationManager* game_manager)
 {
 	game_manager_ = game_manager;
 }
 
 void GLWindow::OnResize(int width, int height) {
-	getAttachedGameManager()->onResize(width, height);
+	getAttachedApplicationManager()->onResize(width, height);
 }
 
 void GLWindow::setupPixelFormat(void) {
@@ -211,12 +211,16 @@ LRESULT GLWindow::WindowProcess(HWND window_handler, UINT message_code, WPARAM w
 		}
 		break;
 		case WM_KEYDOWN:
-			if (w_additional_data == VK_ESCAPE) //If the escape key was pressed
-			{
-				if (MessageBox(window_handler, "Really quit?", "My application", MB_OKCANCEL) == IDOK)
-					DestroyWindow(window_handler);
-				else
-					return 0;
+			switch(w_additional_data) {
+				case(VK_ESCAPE): //If the escape key was pressed
+					if (MessageBox(window_handler, "Really quit?", "My application", MB_OKCANCEL) == IDOK)
+						DestroyWindow(window_handler);
+					else
+						return 0;
+					break;
+				default:
+					this->getAttachedApplicationManager()->processKeyboardEvent(w_additional_data);
+					break;
 			}
 		default:
 			break;
