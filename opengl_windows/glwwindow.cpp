@@ -1,64 +1,78 @@
 #include "glwwindow.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <GL/gl.h>
+#include <GL/glu.h>
+
+#include "wglext.h"
+
+#include "gameManager.h"
+
 PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = NULL;
 
 GLWindow::GLWindow(HINSTANCE instance_handler) {
-		instance_handler_ = instance_handler;
+	instance_handler_ = instance_handler;
 }
 
-bool GLWindow::create() {
-		const char CLASS_NAME[]  = "Windows Window Class";
+bool GLWindow::create(int width, int height, int bpp, bool fullscreen) {
+	const char CLASS_NAME[]  = "Windows Window Class";
 
-		window_rectangle_.left		= (long) 0;
-		window_rectangle_.right		= (long) 1024;
-		window_rectangle_.top			= (long) 0;
-		window_rectangle_.bottom	= (long) 768;
+	window_rectangle_.left			= (long) 0;
+	window_rectangle_.right			= (long) width;
+	window_rectangle_.top			= (long) 0;
+	window_rectangle_.bottom		= (long) height;
 
-		window_class.cbSize					= sizeof(WNDCLASSEX);						// The size, in bytes, of this structure.
-		window_class.style					= CS_HREDRAW | CS_VREDRAW;
+	window_class.cbSize				= sizeof(WNDCLASSEX);						// The size, in bytes, of this structure.
+	window_class.style				= CS_HREDRAW | CS_VREDRAW;
     window_class.lpfnWndProc		= GLWindow::StaticWindowProcess;	// A pointer to an application-defined function called the window procedure or "window proc." 
-		window_class.cbClsExtra			= 0;
+	window_class.cbClsExtra			= 0;
     window_class.cbWndExtra			= 0;
     window_class.hInstance			= instance_handler_;							// A handle to the instance that contains the window procedure for the class. 
-    window_class.lpszClassName	= CLASS_NAME;										// A pointer to a null-terminated string or is an atom.
-		window_class.hCursor				= LoadCursor(NULL, IDC_ARROW);		// A handle to the class cursor.
-		window_class.hIconSm				= LoadIcon(NULL, IDI_WINLOGO);		// A handle to a small icon that is associated with the window class.
-		window_class.hIcon					= LoadIcon(NULL, IDI_APPLICATION);  // default icon
-    window_class.hbrBackground	= NULL;                             // don't need background
+    window_class.lpszClassName		= CLASS_NAME;										// A pointer to a null-terminated string or is an atom.
+	window_class.hCursor			= LoadCursor(NULL, IDC_ARROW);		// A handle to the class cursor.
+	window_class.hIconSm			= LoadIcon(NULL, IDI_WINLOGO);		// A handle to a small icon that is associated with the window class.
+	window_class.hIcon				= LoadIcon(NULL, IDI_APPLICATION);  // default icon
+    window_class.hbrBackground		= NULL;                             // don't need background
     window_class.lpszMenuName		= NULL; 
 
     if(!RegisterClassEx(&window_class))// Registers a window class with the operating system for subsequent use in calls to the CreateWindow or CreateWindowEx function.
-				return false;
+		return false;
 
-		window_extended_style_ = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
+	window_extended_style_ = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
     window_style_ = WS_OVERLAPPEDWINDOW;
 
-		if(!AdjustWindowRectEx(&window_rectangle_, window_style_, false, window_extended_style_))
-			return false;
+	if(!AdjustWindowRectEx(&window_rectangle_, window_style_, false, window_extended_style_))
+		return false;
     
-    HWND window_handler = CreateWindowEx( // Creates an overlapped, pop-up, or child window with an extended window style.
-        NULL,                         // Optional window styles.
-        CLASS_NAME,                   // Window class
-        "Learn to Program Windows",   // Window text
-        WS_OVERLAPPEDWINDOW,          // Window style
-        CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, // Size and position
+    HWND window_handler = CreateWindowEx(						// Creates an overlapped, pop-up, or child window with an extended window style.
+        NULL,													// Optional window styles.
+        CLASS_NAME,												// Window class
+        "Learn to Program Windows",								// Window text
+        WS_OVERLAPPEDWINDOW,									// Window style
+        0, 0,													// Size and position
+		window_rectangle_.right - window_rectangle_.left,
+		window_rectangle_.bottom - window_rectangle_.top,
         NULL,													// Parent window    
         NULL,													// Menu
-        instance_handler_,						// Instance handle
+        instance_handler_,										// Instance handle
         this													// Additional application data
         );
 
     if (window_handler == NULL)
-        return false;
+		return false;
 
-		ShowWindow(window_handler, SW_SHOW);
-		
-		return true;
+	ShowWindow(window_handler, SW_SHOW);
+	UpdateWindow(window_handler_);                 // update the window
+
+	last_time_ = GetTickCount() / 1000.0f; //Initialize the time	
+	return true;
 }
 
 void GLWindow::destroy() 
 {
-		ChangeDisplaySettings(NULL, 0);
+	ChangeDisplaySettings(NULL, 0);
 }
 
 float GLWindow::getElapsedSeconds()
@@ -87,8 +101,13 @@ void GLWindow::processEvents()
     }
 }
 
-void GLWindow::OnResize(HWND window_handler, UINT flag, int width, int height) {
-    // Handle resizing
+void GLWindow::attachGameManager(GameManager* game_manager)
+{
+	game_manager_ = game_manager;
+}
+
+void GLWindow::OnResize(int width, int height) {
+	getAttachedGameManager()->onResize(width, height);
 }
 
 void GLWindow::setupPixelFormat(void) {
@@ -126,121 +145,111 @@ void GLWindow::swapBuffers() {
 
 LRESULT GLWindow::WindowProcess(HWND window_handler, UINT message_code, WPARAM w_additional_data, LPARAM l_additional_data) {
     switch (message_code) {
-				case WM_CREATE:
-				{
-						device_context_handler_ = GetDC(window_handler);
-						setupPixelFormat();
+		case WM_CREATE:
+		{
+			device_context_handler_ = GetDC(window_handler);
+			setupPixelFormat();
 
-						//Set the version that we want, in this case 3.0
-						int attribs[] = {
-							WGL_CONTEXT_MAJOR_VERSION_ARB, 3,
-							WGL_CONTEXT_MINOR_VERSION_ARB, 0,
-						0}; //zero indicates the end of the array
+			//Set the version that we want, in this case 3.0
+			int attribs[] = {
+				WGL_CONTEXT_MAJOR_VERSION_ARB, 3,
+				WGL_CONTEXT_MINOR_VERSION_ARB, 0,
+			0}; //zero indicates the end of the array
 
-						//Create temporary context so we can get a pointer to the function
-						HGLRC tmpContext = wglCreateContext(device_context_handler_);
-						//Make it current
-						wglMakeCurrent(device_context_handler_, tmpContext);
+			//Create temporary context so we can get a pointer to the function
+			HGLRC tmpContext = wglCreateContext(device_context_handler_);
+			//Make it current
+			wglMakeCurrent(device_context_handler_, tmpContext);
 
-						//Get the function pointer
-						wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC) wglGetProcAddress("wglCreateContextAttribsARB");
+			//Get the function pointer
+			wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC) wglGetProcAddress("wglCreateContextAttribsARB");
 
-						//If this is NULL then OpenGL 3.0 is not supported
-						if (!wglCreateContextAttribsARB)
-						{
-								MessageBox(window_handler, "OpenGL 3.0 is not supported, falling back to GL 2.1", "An error occurred", MB_ICONERROR|MB_OK);
-								rendering_context_handler_ = tmpContext;
-						} else {
-								// Create an OpenGL 3.0 context using the new function
-								rendering_context_handler_ = wglCreateContextAttribsARB(device_context_handler_, 0, attribs);
-								//Delete the temporary context
-								wglDeleteContext(tmpContext);
-						}
+			//If this is NULL then OpenGL 3.0 is not supported
+			if (!wglCreateContextAttribsARB)
+			{
+				MessageBox(window_handler, "OpenGL 3.0 is not supported, falling back to GL 2.1", "An error occurred", MB_ICONERROR|MB_OK);
+				rendering_context_handler_ = tmpContext;
+			} else {
+				// Create an OpenGL 3.0 context using the new function
+				rendering_context_handler_ = wglCreateContextAttribsARB(device_context_handler_, 0, attribs);
+				//Delete the temporary context
+				wglDeleteContext(tmpContext);
+			}
 
-						//Make the GL3 context current
-						wglMakeCurrent(device_context_handler_, rendering_context_handler_);
+			//Make the GL3 context current
+			wglMakeCurrent(device_context_handler_, rendering_context_handler_);
 
-						is_running_ = true; //Mark our window as running
-				}
-				break;
-				case WM_CLOSE:
-				{
-						if (MessageBox(window_handler, "Really quit?", "My application", MB_OKCANCEL) == IDOK)
-								DestroyWindow(window_handler);
-						else
-								return 0;
-				}
-				break;
-				case WM_DESTROY:
-				{
-						wglMakeCurrent(device_context_handler_, NULL);
-						wglDeleteContext(rendering_context_handler_);
+			is_running_ = true; //Mark our window as running
+		}
+		break;
+		case WM_CLOSE:
+		{
+			if (MessageBox(window_handler, "Really quit?", "My application", MB_OKCANCEL) == IDOK)
+				DestroyWindow(window_handler);
+			else
+				return 0;
+		}
+		break;
+		case WM_DESTROY:
+		{
+			wglMakeCurrent(device_context_handler_, NULL);
+			wglDeleteContext(rendering_context_handler_);
 
-						is_running_ = false;
+			is_running_ = false;
 
-						PostQuitMessage(0);
-						return 0;
-				}
-				break;
-				case WM_PAINT:
-				{
-						PAINTSTRUCT ps;
-						HDC hdc = BeginPaint(window_handler, &ps);
+			PostQuitMessage(0);
+			return 0;
+		}
+		break;
+		case WM_SIZE:
+		{
+			int width = LOWORD(l_additional_data);  // Macro to get the low-order word.
+			int height = HIWORD(l_additional_data); // Macro to get the high-order word.
 
-						FillRect(hdc, &ps.rcPaint, (HBRUSH) (COLOR_WINDOW+1));
-
-						EndPaint(window_handler, &ps);
-				}
-				break;
-				case WM_SIZE:
-				{
-						int width = LOWORD(l_additional_data);  // Macro to get the low-order word.
-            int height = HIWORD(l_additional_data); // Macro to get the high-order word.
-
-            // Respond to the message:
-            OnResize(window_handler, (UINT)w_additional_data, width, height);
-				}
-				break;
-				case WM_KEYDOWN:
-					if (w_additional_data == VK_ESCAPE) //If the escape key was pressed
-					{
-							if (MessageBox(window_handler, "Really quit?", "My application", MB_OKCANCEL) == IDOK)
-									DestroyWindow(window_handler);
-							else
-									return 0;
-					}
-				default:
-					break;
+			// Respond to the message:
+			OnResize(width, height);
+		}
+		break;
+		case WM_KEYDOWN:
+			if (w_additional_data == VK_ESCAPE) //If the escape key was pressed
+			{
+				if (MessageBox(window_handler, "Really quit?", "My application", MB_OKCANCEL) == IDOK)
+					DestroyWindow(window_handler);
+				else
+					return 0;
+			}
+		default:
+			break;
     }
 
     return DefWindowProc(window_handler, message_code, w_additional_data, l_additional_data);
 }
 
 LRESULT GLWindow::StaticWindowProcess(HWND window_handler, UINT message_code, WPARAM w_additional_data, LPARAM l_additional_data) {
-		GLWindow* window = NULL;
+	GLWindow* window = NULL;
 
     //If this is the create message
     switch(message_code) {
-				case WM_CREATE:
-				{
-						//Get the pointer we stored during create
-						window = (GLWindow*)((LPCREATESTRUCT)l_additional_data)->lpCreateParams;
+		case WM_CREATE:
+		{
+			//Get the pointer we stored during create
+			window = (GLWindow*)((LPCREATESTRUCT)l_additional_data)->lpCreateParams;
 
-						//Associate the window pointer with the hwnd for the other events to access
-						SetWindowLongPtr(window_handler, GWL_USERDATA, (LONG_PTR)window);
-				}
-				break;
-				default:
-				{
-						//If this is not a creation event, then we should have stored a pointer to the window
-						window = (GLWindow*)GetWindowLongPtr(window_handler, GWL_USERDATA);
-
-						if(!window) 
-								return DefWindowProc(window_handler, message_code, w_additional_data, l_additional_data);    
-				}
-				break;
+			//Associate the window pointer with the hwnd for the other events to access
+			SetWindowLongPtr(window_handler, GWL_USERDATA, (LONG_PTR)window);
 		}
+		break;
+		default:
+		{
+			//If this is not a creation event, then we should have stored a pointer to the window
+			window = (GLWindow*)GetWindowLongPtr(window_handler, GWL_USERDATA);
+
+			if(!window) 
+				return DefWindowProc(window_handler, message_code, w_additional_data, l_additional_data);    
+		}
+		break;
+	}
 
     //Call our window's member WndProc (allows us to access member variables)
-		return window->WindowProcess(window_handler, message_code, w_additional_data, l_additional_data);
+	return window->WindowProcess(window_handler, message_code, w_additional_data, l_additional_data);
 }
