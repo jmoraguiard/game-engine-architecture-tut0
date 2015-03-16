@@ -1,0 +1,1 @@
+This repository is just a temporal test for learning the use of Subversion through the tutorials on Game Engine Architecture book.
